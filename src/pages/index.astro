@@ -1,0 +1,94 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+
+const photos = import.meta.glob('/src/assets/profile/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' });
+const photo = Object.values(photos)[0] as ImageMetadata | undefined;
+
+const featured = (await getCollection('projects'))
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const stats = [
+  { value: '52', label: 'residents using Peka Toksin' },
+  { value: '2', label: 'journal articles published' },
+  { value: '905 h', label: 'Bangkit ML cohort, full graduate' },
+  { value: '1', label: 'national PKM-PM 2025 grant' },
+];
+
+const skills = [
+  { group: 'Programming and data analysis', items: 'Python, SQL, Pandas, NumPy, Matplotlib, Seaborn, Streamlit, Microsoft Excel, Data Cleaning, Exploratory Data Analysis (EDA), Feature Engineering, RFM Analysis, Statistical Analysis, Data Visualization and Dashboards' },
+  { group: 'Machine learning and deep learning', items: 'Scikit-learn, TensorFlow, Keras, Supervised and Unsupervised Learning, Regression, Classification, Clustering, K-Means, KNN, Random Forest, AdaBoost, Decision Tree, SVM, LSTM/BiLSTM, Recommender Systems, Predictive Modeling, Model Evaluation, Hyperparameter Tuning, basic GAN and Generative AI' },
+  { group: 'Natural language processing', items: 'TF-IDF, Cosine Similarity, Text and Intent Classification, Sentiment Analysis, IndoBERT, Chatbots' },
+  { group: 'Computer vision', items: 'CNN, Transfer Learning (MobileNetV2), TensorFlow Lite, TensorFlow.js' },
+  { group: 'MLOps and model deployment', items: 'TFX, TensorFlow Transform, TFMA, Apache Beam, TensorFlow Serving, Docker, Prometheus, ML Pipelines, Model Deployment, Model Monitoring, Railway, Flask, REST API, Postman, Git/GitHub' },
+  { group: 'Databases, web, and tools', items: 'MySQL, Laravel, PHP, Google Colab, Jupyter Notebook, VS Code, Android Studio' },
+  { group: 'Professional skills', items: 'Analytical Thinking, Problem Solving, Collaboration, Communication, Attention to Detail, Continuous Learning, Technical Writing' },
+];
+---
+<Base>
+  <section class="mx-auto max-w-5xl px-5 pb-16 pt-16 sm:pt-24">
+    <div class="flex flex-col-reverse gap-10 sm:flex-row sm:items-center sm:justify-between">
+      <div class="max-w-xl">
+        <p class="inline-flex items-start gap-2 rounded-2xl border border-line px-3 py-1.5 text-sm text-muted">
+          <span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-accent" aria-hidden="true"></span>
+          Open to work · Jakarta, Bandung, Tangerang, Bogor · On-site, hybrid, or remote
+        </p>
+        <h1 class="mt-5 text-4xl font-bold sm:text-5xl">Rizki Dwi Sya’bana Nugraha</h1>
+        <p class="mt-3 text-xl text-muted">Data Scientist, Machine Learning Engineer, and AI Engineer</p>
+        <p class="mt-5 text-lg">I build ML and NLP systems that get deployed and used, from Indonesian-language chatbots to on-device computer vision and MLOps pipelines.</p>
+        <p class="mt-3 text-muted">Fresh graduate in Information Systems with hands-on experience in Indonesian NLP, mobile computer vision, and production-style ML pipelines.</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/projects/" class="rounded-md bg-accent px-5 py-2.5 font-medium text-bg transition-opacity hover:opacity-90">View projects</a>
+          <a href="/cv/Rizki-Dwi-Syabana-Nugraha-CV.pdf" class="rounded-md border border-line px-5 py-2.5 font-medium transition-colors hover:border-accent hover:text-accent">Download CV</a>
+          <a href="mailto:rizkidwi78@gmail.com" class="rounded-md border border-line px-5 py-2.5 font-medium transition-colors hover:border-accent hover:text-accent">Contact</a>
+        </div>
+      </div>
+      {photo ? (
+        <Image src={photo} alt="Portrait of Rizki Dwi Sya’bana Nugraha" width={320} height={320} class="h-32 w-32 shrink-0 rounded-full border border-line object-cover sm:h-40 sm:w-40" />
+      ) : (
+        <div class="grid h-32 w-32 shrink-0 place-items-center rounded-full border border-line bg-accent-soft text-3xl font-semibold text-accent sm:h-40 sm:w-40" aria-hidden="true">RD</div>
+      )}
+    </div>
+
+    <dl class="mt-16 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-line pt-8 md:grid-cols-4">
+      {stats.map((s) => (
+        <div>
+          <dt class="font-mono text-3xl font-semibold text-accent">{s.value}</dt>
+          <dd class="mt-1 text-sm text-muted">{s.label}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  <section class="mx-auto max-w-5xl px-5 py-12">
+    <div class="flex items-baseline justify-between">
+      <h2 class="text-2xl font-semibold">Featured projects</h2>
+      <a href="/projects/" class="text-sm text-accent hover:underline">All projects</a>
+    </div>
+    <div class="mt-8 grid gap-6 md:grid-cols-3">
+      {featured.map((p) => <ProjectCard project={p} />)}
+    </div>
+  </section>
+
+  <section id="about" class="mx-auto max-w-5xl px-5 py-12">
+    <h2 class="text-2xl font-semibold">About</h2>
+    <div class="mt-6 grid gap-10 md:grid-cols-2">
+      <div class="space-y-4 text-lg">
+        <p>Information Systems graduate from Universitas Komputer Indonesia (GPA 3.89, Magna Cum Laude) focused on data science, machine learning, and NLP. I like taking a problem from raw data to something people actually use.</p>
+        <p>I am open to entry-level and internship opportunities in Data Science, Machine Learning Engineering, and AI Engineering. I am willing to relocate and work on-site, hybrid, or remotely across Indonesia.</p>
+        <p>I care about the part after the notebook: deployment, validation with real users, and honest evaluation. My thesis chatbot was checked by health center staff, and my mold detection app is used by people in the village where we built it.</p>
+      </div>
+      <dl class="space-y-5">
+        {skills.map((s) => (
+          <div>
+            <dt class="font-semibold">{s.group}</dt>
+            <dd class="mt-1 text-muted">{s.items}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+</Base>

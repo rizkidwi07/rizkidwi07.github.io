@@ -1,0 +1,75 @@
+---
+export interface NodeSpec { title: string[]; sub?: string[]; accent?: boolean }
+export interface Lane { label: string; nodes: NodeSpec[] }
+export interface Link { from: [number, number]; to: [number, number]; label?: string }
+interface Props { title: string; description: string; lanes: Lane[]; links?: Link[] }
+
+const { title, description, lanes, links = [] } = Astro.props;
+const W = 980, NW = 164, NH = 82, GAP = 34, LANE_H = 118, LANE_GAP = 64, PAD = 8;
+const laneY = (i: number) => PAD + i * (LANE_H + LANE_GAP);
+const nodeY = (lane: number) => laneY(lane) + 26;
+const nodeX = (lane: number, idx: number) => {
+  const n = lanes[lane].nodes.length;
+  const total = n * NW + (n - 1) * GAP;
+  return (W - total) / 2 + idx * (NW + GAP);
+};
+const H = PAD * 2 + lanes.length * LANE_H + (lanes.length - 1) * LANE_GAP;
+
+const linkPaths = links.map((l) => {
+  const ax = nodeX(l.from[0], l.from[1]) + NW / 2;
+  const ay = nodeY(l.from[0]) + NH;
+  const bx = nodeX(l.to[0], l.to[1]) + NW / 2;
+  const by = nodeY(l.to[0]);
+  const mid = (ay + by) / 2;
+  return { d: `M${ax} ${ay} V${mid} H${bx} V${by - 2}`, lx: (ax + bx) / 2, ly: mid - 7, label: l.label };
+});
+---
+<svg viewBox={`0 0 ${W} ${H}`} class="fd block h-auto w-full min-w-[840px]" role="img" aria-labelledby="fd-title fd-desc">
+  <title id="fd-title">{title}</title>
+  <desc id="fd-desc">{description}</desc>
+  <defs>
+    <marker id="fd-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9" class="fd-head" />
+    </marker>
+  </defs>
+
+  {lanes.map((lane, li) => (
+    <g>
+      <text x={nodeX(li, 0)} y={laneY(li) + 14} class="fd-lane">{lane.label}</text>
+      {lane.nodes.slice(0, -1).map((_, i) => (
+        <line x1={nodeX(li, i) + NW + 2} y1={nodeY(li) + NH / 2} x2={nodeX(li, i + 1) - 3} y2={nodeY(li) + NH / 2} class="fd-edge" marker-end="url(#fd-arrow)" />
+      ))}
+      {lane.nodes.map((n, i) => (
+        <g>
+          <rect x={nodeX(li, i)} y={nodeY(li)} width={NW} height={NH} rx="10" class={n.accent ? 'fd-node fd-accent' : 'fd-node'} />
+          {n.title.map((t, k) => (
+            <text x={nodeX(li, i) + NW / 2} y={nodeY(li) + 23 + k * 16} class="fd-t">{t}</text>
+          ))}
+          {(n.sub ?? []).map((t, k) => (
+            <text x={nodeX(li, i) + NW / 2} y={nodeY(li) + 23 + n.title.length * 16 + 5 + k * 14} class="fd-s">{t}</text>
+          ))}
+        </g>
+      ))}
+    </g>
+  ))}
+
+  {linkPaths.map((p) => (
+    <g>
+      <path d={p.d} class="fd-link" marker-end="url(#fd-arrow)" />
+      {p.label && <text x={p.lx} y={p.ly} class="fd-s fd-linklabel">{p.label}</text>}
+    </g>
+  ))}
+</svg>
+
+<style>
+  .fd { font-family: "Inter Variable", Inter, ui-sans-serif, system-ui, sans-serif; }
+  .fd-node { fill: var(--bg); stroke: var(--border); stroke-width: 1.5; }
+  .fd-accent { fill: var(--accent-soft); stroke: var(--accent); }
+  .fd-t { fill: var(--text); font-size: 13.5px; font-weight: 600; text-anchor: middle; }
+  .fd-s { fill: var(--text-muted); font-size: 12px; text-anchor: middle; }
+  .fd-lane { fill: var(--text-muted); font-size: 12.5px; font-weight: 600; }
+  .fd-edge { stroke: var(--text-muted); stroke-width: 1.5; }
+  .fd-link { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 5 4; fill: none; }
+  .fd-linklabel { fill: var(--accent); font-weight: 500; }
+  .fd-head { fill: none; stroke: var(--text-muted); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+</style>

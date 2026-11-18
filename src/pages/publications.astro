@@ -1,0 +1,120 @@
+---
+import Base from '../layouts/Base.astro';
+
+const papers = [
+  {
+    title: 'Implementasi Aplikasi Peka Toksin Berbasis AI dalam Mitigasi Risiko Jamur Hitam di Desa Pamekaran',
+    venue: 'KACANEGARA: Jurnal Pengabdian pada Masyarakat, Vol. 9 No. 3, 2026, pp. 467–476',
+    role: 'First author (SINTA 4)',
+    doi: 'https://doi.org/10.28989/kacanegara.v9i3.3514',
+  },
+  {
+    title: 'Development of a CNN Application for Black Mold Detection with Management Information System',
+    venue: '@is The Best, Vol. 10 No. 1, 2026, pp. 31–45',
+    role: 'Third author (SINTA 4)',
+    doi: 'https://doi.org/10.34010/aisthebest.v10i1.17909',
+  },
+];
+
+type Cert = { name: string; by: string; date: string };
+const groups: { title: string; items: Cert[] }[] = [
+  {
+    title: 'Professional certification and programs',
+    items: [
+      { name: 'Certified Associate Data Scientist (CADS)', by: 'Badan Nasional Sertifikasi Profesi (BNSP)', date: 'Feb 2026' },
+      { name: 'Machine Learning Cohort, 905 hours, full graduate', by: 'Bangkit Academy 2024 (Google, Tokopedia, Gojek, Traveloka)', date: 'Dec 2024' },
+      { name: 'English Proficiency Test, score 500', by: 'Universitas Komputer Indonesia', date: 'May 2026' },
+    ],
+  },
+  {
+    title: 'Machine learning and deep learning',
+    items: [
+      { name: 'Belajar Machine Learning Terapan', by: 'Dicoding Indonesia', date: 'Mar 2025' },
+      { name: 'Belajar Fundamental Deep Learning', by: 'Dicoding Indonesia', date: 'Aug 2026' },
+      { name: 'Belajar Machine Learning untuk Pemula', by: 'Dicoding Indonesia', date: 'Jun 2026' },
+      { name: 'Machine Learning Specialization', by: 'DeepLearning.AI', date: 'Oct 2024' },
+      { name: 'TensorFlow Developer Professional Certificate', by: 'DeepLearning.AI', date: 'Nov 2024' },
+      { name: 'Advanced Computer Vision with TensorFlow', by: 'DeepLearning.AI', date: 'Nov 2024' },
+      { name: 'Custom and Distributed Training with TensorFlow', by: 'DeepLearning.AI', date: 'Nov 2024' },
+      { name: 'Custom Models, Layers, and Loss Functions with TensorFlow', by: 'DeepLearning.AI', date: 'Nov 2024' },
+      { name: 'Structuring Machine Learning Projects', by: 'DeepLearning.AI', date: 'Nov 2024' },
+      { name: 'Linear Algebra for Machine Learning and Data Science', by: 'DeepLearning.AI', date: 'Oct 2024' },
+    ],
+  },
+  {
+    title: 'MLOps and deployment',
+    items: [
+      { name: 'Machine Learning Operations (MLOps)', by: 'Dicoding Indonesia', date: 'Mar 2025' },
+      { name: 'Device-based Models with TensorFlow Lite', by: 'DeepLearning.AI', date: 'Nov 2024' },
+      { name: 'Browser-based Models with TensorFlow.js', by: 'DeepLearning.AI', date: 'Nov 2024' },
+      { name: 'Data Pipelines with TensorFlow Data Services', by: 'DeepLearning.AI', date: 'Nov 2024' },
+    ],
+  },
+  {
+    title: 'Generative AI and AI agents',
+    items: [
+      { name: 'AI Agent for Data Analysis (final score 87.30)', by: 'IBM SkillsBuild University Education × Hacktiv8', date: 'Jul 2026' },
+      { name: 'Build Basic Generative Adversarial Networks (GANs)', by: 'DeepLearning.AI', date: 'Dec 2024' },
+      { name: 'Generative AI for Everyone', by: 'DeepLearning.AI', date: 'Nov 2024' },
+      { name: 'Belajar Penggunaan Generative AI', by: 'Dicoding Indonesia', date: 'Jun 2025' },
+      { name: 'AI Praktis untuk Produktivitas', by: 'Dicoding Indonesia', date: 'Jun 2025' },
+    ],
+  },
+  {
+    title: 'Data science and analytics',
+    items: [
+      { name: 'Belajar Dasar Data Science', by: 'Dicoding Indonesia', date: 'Jun 2026' },
+      { name: 'Belajar Analisis Data dengan Python', by: 'Dicoding Indonesia', date: 'Oct 2024' },
+      { name: 'Belajar Dasar Structured Query Language (SQL)', by: 'Dicoding Indonesia', date: 'Jul 2024' },
+      { name: 'Belajar Dasar Visualisasi Data', by: 'Dicoding Indonesia', date: 'Jun 2024' },
+      { name: 'Fullstack Microsoft Excel, Basic to Advanced (Batch 18)', by: 'MySkill', date: 'May 2024' },
+    ],
+  },
+  {
+    title: 'Programming foundations',
+    items: [
+      { name: 'Crash Course on Python', by: 'Google', date: 'Sep 2024' },
+      { name: 'Using Python to Interact with the Operating System', by: 'Google', date: 'Sep 2024' },
+      { name: 'Memulai Pemrograman dengan Python', by: 'Dicoding Indonesia', date: 'Jul 2024' },
+      { name: 'Belajar Dasar Git dengan GitHub', by: 'Dicoding Indonesia', date: 'Sep 2024' },
+      { name: 'Pengenalan ke Logika Pemrograman (Programming Logic 101)', by: 'Dicoding Indonesia', date: 'Sep 2024' },
+      { name: 'Memulai Dasar Pemrograman untuk Menjadi Pengembang Software', by: 'Dicoding Indonesia', date: 'Sep 2024' },
+      { name: 'Belajar Dasar AI', by: 'Dicoding Indonesia', date: 'Jun 2024' },
+    ],
+  },
+];
+---
+<Base title="Publications and certifications" description="Two journal articles and professional certifications in machine learning, MLOps, and data science.">
+  <section class="mx-auto max-w-3xl px-5 py-16">
+    <h1 class="text-4xl font-bold">Publications</h1>
+    <p class="mt-4 text-lg text-muted">Both papers come from the Peka Toksin community service project.</p>
+    <ul class="mt-10 space-y-8">
+      {papers.map((p) => (
+        <li>
+          <h2 class="text-lg font-semibold">{p.title}</h2>
+          <p class="mt-1 text-muted">{p.venue}</p>
+          <p class="mt-1">{p.role}. <a href={p.doi} rel="noopener" class="text-accent underline underline-offset-4">{p.doi.replace('https://', '')}</a></p>
+        </li>
+      ))}
+    </ul>
+
+    <h2 class="mt-20 text-3xl font-bold">Certifications and training</h2>
+    <p class="mt-3 text-muted">Grouped by topic, with the most relevant first.</p>
+    {groups.map((g) => (
+      <div class="mt-12">
+        <h3 class="text-xl font-semibold">{g.title}</h3>
+        <ul class="mt-4 divide-y divide-line border-y border-line">
+          {g.items.map((c) => (
+            <li class="flex flex-col gap-1 py-3 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+              <div>
+                <p class="font-medium">{c.name}</p>
+                <p class="text-sm text-muted">{c.by}</p>
+              </div>
+              <p class="shrink-0 font-mono text-sm text-muted">{c.date}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </section>
+</Base>

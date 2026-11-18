@@ -1,0 +1,19 @@
+---
+import { Image } from 'astro:assets';
+import type { Shot } from '../data/gallery';
+
+interface Props { id: string; shots: Shot[]; }
+const { id, shots } = Astro.props;
+const imgs = import.meta.glob('/src/assets/projects/*/*.{png,jpg,jpeg,webp}', { eager: true, import: 'default' }) as Record<string, ImageMetadata>;
+const find = (file: string) => imgs[`/src/assets/projects/${id}/${file}`];
+const items = shots.map((s) => ({ ...s, img: find(s.file) })).filter((s) => s.img);
+---
+<div class="grid gap-x-8 gap-y-10 sm:grid-cols-2 not-prose">
+  {items.map((s) => (
+    <figure class={`${s.kind === 'wide' || !s.kind ? 'sm:col-span-2' : 'mx-auto w-full max-w-[17rem]'}`}>
+      <Image src={s.img} alt={s.alt} loading="lazy" sizes="(min-width: 1024px) 720px, 100vw"
+        class={s.bare ? 'mx-auto h-auto max-w-full' : 'h-auto w-full rounded-lg border border-line bg-surface'} />
+      <figcaption class="mt-3 text-sm text-muted">{s.caption}</figcaption>
+    </figure>
+  ))}
+</div>
